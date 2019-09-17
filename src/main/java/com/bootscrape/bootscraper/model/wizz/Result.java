@@ -3,6 +3,7 @@ package com.bootscrape.bootscraper.model.wizz;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -23,6 +24,9 @@ public class Result {
     private double price;
     private String currency;
     private Date datetime;
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date timestamp;
 
 
     public Result(String departure, String arrival, double price, String currency, Date datetime) {
