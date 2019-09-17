@@ -29,7 +29,7 @@ import java.util.List;
 public class HttpRequestEngine {
 
 
-    private static final String timetableUrl = "https://be.wizzair.com/9.12.0/Api/search/timetable";
+    private static final String timetableUrl = "https://be.wizzair.com/9.17.0/Api/search/timetable";
     private static final String USER_AGENT = "Mozilla/5.0";
     private static final String DISCOUNTED_PRICE = "wdc";
 
