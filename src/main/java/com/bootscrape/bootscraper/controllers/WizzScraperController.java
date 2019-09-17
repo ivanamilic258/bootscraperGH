@@ -2,7 +2,6 @@ package com.bootscrape.bootscraper.controllers;
 
 import com.bootscrape.bootscraper.dto.ImportResultsRequest;
 import com.bootscrape.bootscraper.dto.UserDto;
-import com.bootscrape.bootscraper.dto.request.DepArrDto;
 import com.bootscrape.bootscraper.exception.StringException;
 import com.bootscrape.bootscraper.service.ResultsService;
 import com.bootscrape.bootscraper.service.UserService;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
-import java.util.List;
 
 
 @Controller
@@ -45,7 +43,7 @@ public class WizzScraperController {
     @ResponseBody
     public void importResults(@RequestBody ImportResultsRequest request){
         try {
-            resultsService.importDeparturesUntilEndOfTheYear( request.getRoutes());
+            resultsService.importDeparturesInDateRange( request.getRoutes(), request.getDateFrom(),request.getDateTo());
         } catch (ParseException e) {
             throw new StringException("Parsing exception");
         }

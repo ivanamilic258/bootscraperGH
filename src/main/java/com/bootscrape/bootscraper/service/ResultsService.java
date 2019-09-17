@@ -26,19 +26,20 @@ public class ResultsService {
     HttpRequestEngine httpRequestEngine;
 
     private static  final int year = 2019;
-    public void importDeparturesUntilEndOfTheYear(List<DepArrDto> routes) throws ParseException {
+
+    public void importDeparturesInDateRange(List<DepArrDto> routes, Date dateFrom, Date dateTo) throws ParseException {
 
         resultsRepository.deleteAll();
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-       Date dateFrom = new Date();
+//       Date dateFrom = new Date();
 
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.YEAR, year);
-        cal.set(Calendar.MONTH,9 );
-        cal.set(Calendar.DAY_OF_MONTH, 31);
-
-        Date dateTo = cal.getTime();
+//        Calendar cal = Calendar.getInstance();
+//        cal.set(Calendar.YEAR, year);
+//        cal.set(Calendar.MONTH,12 );
+//        cal.set(Calendar.DAY_OF_MONTH, 31);
+//
+//        Date dateTo = cal.getTime();
 
 
         List<TimetableResponseDto> response = httpRequestEngine.requestTimetableResults(routes,dateFrom, dateTo);
