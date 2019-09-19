@@ -65,10 +65,13 @@ public class ResultsService {
     }
 
     public void importForDateRange(Date dateFrom, Date dateTo) throws ParseException {
+        resultsRepository.deleteAll();
+
         List<DeparturesArrivalsRepository.DepArrCurrDto> routesList = getNonDuplicatedRoutes();
         List<DepArrDto> routes = new ArrayList<>(  );
         routesList.forEach( r -> routes.add( new DepArrDto( r.getDeparture(), r.getArrival() ) ) );
         List<Result> results = getResultsFromEndpoint( routes,dateFrom,dateTo );
+
         resultsRepository.saveAll(results);
     }
 }
