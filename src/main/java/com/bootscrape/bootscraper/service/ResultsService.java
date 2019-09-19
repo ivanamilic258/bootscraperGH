@@ -27,21 +27,18 @@ public class ResultsService {
 
     private static  final int year = 2019;
 
-    public void importDeparturesInDateRange(List<DepArrDto> routes, Date dateFrom, Date dateTo) throws ParseException {
+    public void importSelectedDeparturesInDateRange(List<DepArrDto> routes, Date dateFrom, Date dateTo) throws ParseException {
 
         resultsRepository.deleteAll();
 
+        List<Result> results = getResultsFromEndpoint( routes,dateFrom,dateTo );
+        resultsRepository.saveAll(results);
+
+    }
+
+
+    private List<Result> getResultsFromEndpoint(List<DepArrDto> routes, Date dateFrom, Date dateTo) throws ParseException{
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-//       Date dateFrom = new Date();
-
-//        Calendar cal = Calendar.getInstance();
-//        cal.set(Calendar.YEAR, year);
-//        cal.set(Calendar.MONTH,12 );
-//        cal.set(Calendar.DAY_OF_MONTH, 31);
-//
-//        Date dateTo = cal.getTime();
-
-
         List<TimetableResponseDto> response = httpRequestEngine.requestTimetableResults(routes,dateFrom, dateTo);
         List<Result> results = new ArrayList<>();
         if(!response.isEmpty()){
@@ -49,19 +46,29 @@ public class ResultsService {
                 if(!responseDto.getOutboundFlights().isEmpty()){
                     for (FlightDto of : responseDto.getOutboundFlights()) {
                         results.add(new Result(of.getDepartureStation(), of.getArrivalStation(), of.getPrice().getAmount(), of.getPrice().getCurrencyCode(),
-                                sdf.parse(of.getDepartureDate())));
+                                               sdf.parse(of.getDepartureDate())));
                     }
                 }
                 if(!responseDto.getReturnFlights().isEmpty()){
                     for (FlightDto rf : responseDto.getReturnFlights()) {
                         results.add(new Result(rf.getDepartureStation(), rf.getArrivalStation(), rf.getPrice().getAmount(), rf.getPrice().getCurrencyCode(),
-                                sdf.parse(rf.getDepartureDate())));
+                                               sdf.parse(rf.getDepartureDate())));
                     }
                 }
             }
         }
+        return results;
+    }
 
+    public  List<DeparturesArrivalsRepository.DepArrCurrDto> getNonDuplicatedRoutes(){
+      return  departuresArrivalsRepository.findAllNonDuplicated();
+    }
+
+    public void importForDateRange(Date dateFrom, Date dateTo) throws ParseException {
+        List<DeparturesArrivalsRepository.DepArrCurrDto> routesList = getNonDuplicatedRoutes();
+        List<DepArrDto> routes = new ArrayList<>(  );
+        routesList.forEach( r -> routes.add( new DepArrDto( r.getDeparture(), r.getArrival() ) ) );
+        List<Result> results = getResultsFromEndpoint( routes,dateFrom,dateTo );
         resultsRepository.saveAll(results);
-
     }
 }
