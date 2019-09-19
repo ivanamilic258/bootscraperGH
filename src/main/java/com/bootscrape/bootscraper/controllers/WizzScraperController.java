@@ -66,4 +66,15 @@ public class WizzScraperController {
         }
     }
 
+    //best value is in approx. 7 weeks
+    @RequestMapping(value = "importResults7WeeksFromNow",method = RequestMethod.POST)
+    @ResponseBody
+    public void importResults7WeeksFromNow() {
+        try {
+            resultsService.importResults7WeeksFromNow();
+        } catch (ParseException e) {
+            throw new StringException("Parsing exception");
+        }
+    }
+
 }

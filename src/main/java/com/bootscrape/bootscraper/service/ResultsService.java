@@ -7,6 +7,7 @@ import com.bootscrape.bootscraper.engine.HttpRequestEngine;
 import com.bootscrape.bootscraper.model.wizz.Result;
 import com.bootscrape.bootscraper.repository.DeparturesArrivalsRepository;
 import com.bootscrape.bootscraper.repository.ResultsRepository;
+import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -67,10 +68,26 @@ public class ResultsService {
     public void importForDateRange(Date dateFrom, Date dateTo) throws ParseException {
         resultsRepository.deleteAll();
 
+
+        List<Result> results = getResultsFromEndpoint( getAllRoutes(),dateFrom,dateTo );
+
+        resultsRepository.saveAll(results);
+    }
+
+    List<DepArrDto> getAllRoutes(){
         List<DeparturesArrivalsRepository.DepArrCurrDto> routesList = getNonDuplicatedRoutes();
         List<DepArrDto> routes = new ArrayList<>(  );
         routesList.forEach( r -> routes.add( new DepArrDto( r.getDeparture(), r.getArrival() ) ) );
-        List<Result> results = getResultsFromEndpoint( routes,dateFrom,dateTo );
+        return routes;
+    }
+
+    public void importResults7WeeksFromNow() throws ParseException {
+        LocalDate startDate = LocalDate.now().plusDays( 35 );
+        LocalDate endDate = LocalDate.now().plusDays( 65 );
+        resultsRepository.deleteAll();
+
+
+        List<Result> results = getResultsFromEndpoint( getAllRoutes(),startDate.toDate(),endDate.toDate());
 
         resultsRepository.saveAll(results);
     }
