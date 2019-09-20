@@ -16,6 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 public class ImportResultsRequest {
 
+    private String username;
     private List<String> destinations;
     private List<DepArrDto> routes;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")

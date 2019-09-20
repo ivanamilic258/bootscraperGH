@@ -89,4 +89,19 @@ public class WizzScraperController {
        }
    }
 
+
+   //every possible combination for user's desired destinations
+   @RequestMapping(value = "importDestinationsForUser",method = RequestMethod.POST)
+   @ResponseBody
+   public void importDestinationsForUser(@RequestBody ImportResultsRequest request) {
+       try {
+           resultsService.importDestinationsForUser(request.getUsername(), request.getDateFrom(), request.getDateTo());
+       } catch (ParseException e) {
+           throw new StringException("Parsing exception");
+       }
+   }
+
+
+
+
 }

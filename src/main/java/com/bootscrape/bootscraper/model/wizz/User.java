@@ -1,17 +1,18 @@
 package com.bootscrape.bootscraper.model.wizz;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Data
 @Table(name = "wizz_user")
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class User {
 
     @Id
@@ -25,6 +26,10 @@ public class User {
     @NonNull
     private String email;
 
-    public User() {
-    }
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER )
+    @JoinTable(name = "wizz_users_airports", joinColumns = { @JoinColumn(name = "userId", referencedColumnName = "id") },
+               inverseJoinColumns = { @JoinColumn(name = "airportId", referencedColumnName = "id") })
+    private Set<Airport> airports= new HashSet<>();
+
 }

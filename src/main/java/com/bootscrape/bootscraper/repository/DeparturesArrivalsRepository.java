@@ -63,6 +63,25 @@ public interface DeparturesArrivalsRepository extends CrudRepository<DeparturesA
             + "where da.departureAirport_id in :ids", nativeQuery = true)
     List<DepArrCurrDto> findNonDuplicatedForAirportIds(@Param("ids")List<Long> ids);
 
+ @Query(value =  "select  distinct \n"
+            + "                      case \n"
+            + "                       when da.departureAirport_id < da.arrivalAirport_id then a1.`code`\n"
+            + "                       else a.`code`\n"
+            + "                     end as departure,\n"
+            + "                    case \n"
+            + "                       when da.departureAirport_id > da.arrivalAirport_id then a1.`code`\n"
+            + "                      else a.`code` \n"
+            + "                     end as  arrival,\n"
+            + "   case \n"
+            + "                       when da.departureAirport_id < da.arrivalAirport_id then a1.currency_id\n"
+            + "                       else a.currency_id\n"
+            + "                     end as currencyId\n"
+            + "      from wizz_departures_arrivals da\n"
+            + "join wizz_airport a on a.id = da.arrivalAirport_id\n"
+            + "join wizz_airport a1 on a1.id = da.departureAirport_id\n"
+            + "where da.departureAirport_id in :ids and da.arrivalAirport_id in :ids", nativeQuery = true)
+    List<DepArrCurrDto> findNonDuplicatedCombinationsForAirportIds(@Param("ids")List<Long> ids);
+
 
     public static  interface DepArrCurrDto{
         String getDeparture();
