@@ -5,6 +5,7 @@ import com.bootscrape.bootscraper.dto.response.FlightDto;
 import com.bootscrape.bootscraper.dto.response.TimetableResponseDto;
 import com.bootscrape.bootscraper.engine.HttpRequestEngine;
 import com.bootscrape.bootscraper.model.wizz.Result;
+import com.bootscrape.bootscraper.repository.AirportRepository;
 import com.bootscrape.bootscraper.repository.DeparturesArrivalsRepository;
 import com.bootscrape.bootscraper.repository.ResultsRepository;
 import org.joda.time.LocalDate;
@@ -25,6 +26,8 @@ public class ResultsService {
     ResultsRepository resultsRepository;
     @Autowired
     HttpRequestEngine httpRequestEngine;
+    @Autowired
+    AirportRepository airportRepository;
 
     private static  final int year = 2019;
 
@@ -81,13 +84,30 @@ public class ResultsService {
         return routes;
     }
 
+    List<DepArrDto> getRoutesForAirportIds(List<Long> ids){
+        List<DeparturesArrivalsRepository.DepArrCurrDto> routesList = departuresArrivalsRepository.findNonDuplicatedForAirportIds( ids );
+        List<DepArrDto> routes = new ArrayList<>(  );
+        routesList.forEach( r -> routes.add( new DepArrDto( r.getDeparture(), r.getArrival() ) ) );
+        return routes;
+    }
+
     public void importResults7WeeksFromNow() throws ParseException {
         LocalDate startDate = LocalDate.now().plusDays( 35 );
         LocalDate endDate = LocalDate.now().plusDays( 65 );
         resultsRepository.deleteAll();
 
-
         List<Result> results = getResultsFromEndpoint( getAllRoutes(),startDate.toDate(),endDate.toDate());
+
+        resultsRepository.saveAll(results);
+    }
+
+    public void importForDestinations(List<String> destinations, Date dateFrom, Date dateTo) throws ParseException{
+        List<Long> airportIds =  new ArrayList<>(  );
+        destinations.forEach( d -> airportIds.add( airportRepository.findAirportByCode( d ).getId() ) );
+
+        resultsRepository.deleteAll();
+
+        List<Result> results = getResultsFromEndpoint(getRoutesForAirportIds( airportIds ),dateFrom,dateTo);
 
         resultsRepository.saveAll(results);
     }

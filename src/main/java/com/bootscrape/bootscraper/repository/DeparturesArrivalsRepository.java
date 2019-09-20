@@ -5,6 +5,7 @@ import com.bootscrape.bootscraper.model.wizz.DeparturesArrivals;
 import com.bootscrape.bootscraper.model.wizz.User;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -42,6 +43,25 @@ public interface DeparturesArrivalsRepository extends CrudRepository<DeparturesA
             + "join wizz_airport a on a.id = da.arrivalAirport_id\n"
             + "join wizz_airport a1 on a1.id = da.departureAirport_id", nativeQuery = true)
     List<DepArrCurrDto> findAllNonDuplicated();
+
+    @Query(value =  "select  distinct \n"
+            + "                      case \n"
+            + "                       when da.departureAirport_id < da.arrivalAirport_id then a1.`code`\n"
+            + "                       else a.`code`\n"
+            + "                     end as departure,\n"
+            + "                    case \n"
+            + "                       when da.departureAirport_id > da.arrivalAirport_id then a1.`code`\n"
+            + "                      else a.`code` \n"
+            + "                     end as  arrival,\n"
+            + "   case \n"
+            + "                       when da.departureAirport_id < da.arrivalAirport_id then a1.currency_id\n"
+            + "                       else a.currency_id\n"
+            + "                     end as currencyId\n"
+            + "      from wizz_departures_arrivals da\n"
+            + "join wizz_airport a on a.id = da.arrivalAirport_id\n"
+            + "join wizz_airport a1 on a1.id = da.departureAirport_id\n"
+            + "where da.departureAirport_id in :ids", nativeQuery = true)
+    List<DepArrCurrDto> findNonDuplicatedForAirportIds(@Param("ids")List<Long> ids);
 
 
     public static  interface DepArrCurrDto{
