@@ -117,6 +117,32 @@ public class WizzScraperController {
    }
 
 
+ //every possible combination for user's desired destinations
+   @RequestMapping(value = "importDestinationsForUserFromTSR",method = RequestMethod.POST)
+   @ResponseBody
+   public void importDestinationsForUserFromTSR(@RequestBody ImportResultsRequest request) {
+       try {
+           List<String> departures = Arrays.asList( "TSR" );
+           resultsService.importDestinationsForUser(request.getUsername(), request.getDateFrom(), request.getDateTo(), departures);
+       } catch (ParseException e) {
+           throw new StringException("Parsing exception");
+       }
+   }
+
+
+ //every possible combination for user's desired destinations
+   @RequestMapping(value = "importDestinationsForUserFromBUD",method = RequestMethod.POST)
+   @ResponseBody
+   public void importDestinationsForUserFromBUD(@RequestBody ImportResultsRequest request) {
+       try {
+           List<String> departures = Arrays.asList( "BUD" );
+           resultsService.importDestinationsForUser(request.getUsername(), request.getDateFrom(), request.getDateTo(), departures);
+       } catch (ParseException e) {
+           throw new StringException("Parsing exception");
+       }
+   }
+
+
 
 
 }
