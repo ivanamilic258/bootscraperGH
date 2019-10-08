@@ -11,6 +11,7 @@ import com.bootscrape.bootscraper.repository.AirportRepository;
 import com.bootscrape.bootscraper.repository.DeparturesArrivalsRepository;
 import com.bootscrape.bootscraper.repository.ResultsRepository;
 import com.bootscrape.bootscraper.repository.UserRepository;
+import com.bootscrape.bootscraper.util.ConstantManager;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -93,7 +94,7 @@ public class ResultsService {
 		return routes;
 	}
 
-	List<DepArrDto> getRoutesForUser(String username) {
+	List<DepArrDto> getRoutesForUserWithAddedDepartures(String username, List<String> departures) {
 		User user = userRepository.findUserByUsername( username );
 		Set<Airport> destinationsOfInterest = user.getAirports();
 
@@ -101,6 +102,11 @@ public class ResultsService {
 		if (destinationsOfInterest != null && !destinationsOfInterest.isEmpty()) {
 			List<Long> ids = new ArrayList<>();
 			destinationsOfInterest.forEach( d -> ids.add( d.getId() ) );
+			if(departures !=  null && !departures.isEmpty()){
+				for (String departure : departures) {
+					ids.add( airportRepository.findAirportByCode( departure ).getId() );
+				}
+			}
 			List<DeparturesArrivalsRepository.DepArrCurrDto> routesList = departuresArrivalsRepository.findNonDuplicatedCombinationsForAirportIds( ids );
 			routesList.forEach( r -> routes.add( new DepArrDto( r.getDeparture(), r.getArrival() ) ) );
 		}
@@ -128,10 +134,10 @@ public class ResultsService {
 		resultsRepository.saveAll( results );
 	}
 
-	public void importDestinationsForUser(String username, Date dateFrom, Date dateTo) throws ParseException {
+	public void importDestinationsForUser(String username, Date dateFrom, Date dateTo,List<String> departures) throws ParseException {
 		resultsRepository.deleteAll();
 
-		List<Result> results = getResultsFromEndpoint( getRoutesForUser( username ), dateFrom, dateTo );
+		List<Result> results = getResultsFromEndpoint( getRoutesForUserWithAddedDepartures( username, departures ), dateFrom, dateTo );
 
 		resultsRepository.saveAll( results );
 	}

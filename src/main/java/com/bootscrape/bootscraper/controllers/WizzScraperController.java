@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -40,6 +41,7 @@ public class WizzScraperController {
         userService.addUser(userDto);
     }
 
+    //results for routes
     @RequestMapping(value = "importResults",method = RequestMethod.POST)
     @ResponseBody
     public void importResults(@RequestBody ImportResultsRequest request){
@@ -95,7 +97,20 @@ public class WizzScraperController {
    @ResponseBody
    public void importDestinationsForUser(@RequestBody ImportResultsRequest request) {
        try {
-           resultsService.importDestinationsForUser(request.getUsername(), request.getDateFrom(), request.getDateTo());
+           List<String> departures = Arrays.asList( "BEG", "BUD", "TSR" );
+           resultsService.importDestinationsForUser(request.getUsername(), request.getDateFrom(), request.getDateTo(),departures);
+       } catch (ParseException e) {
+           throw new StringException("Parsing exception");
+       }
+   }
+
+ //every possible combination for user's desired destinations
+   @RequestMapping(value = "importDestinationsForUserFromBEG",method = RequestMethod.POST)
+   @ResponseBody
+   public void importDestinationsForUserFromBEG(@RequestBody ImportResultsRequest request) {
+       try {
+           List<String> departures = Arrays.asList( "BEG" );
+           resultsService.importDestinationsForUser(request.getUsername(), request.getDateFrom(), request.getDateTo(), departures);
        } catch (ParseException e) {
            throw new StringException("Parsing exception");
        }
