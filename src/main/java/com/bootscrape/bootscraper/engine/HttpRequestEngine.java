@@ -28,7 +28,9 @@ import java.util.List;
 @Component
 public class HttpRequestEngine {
 
-    private static final String timetableUrl = "https://be.wizzair.com/9.18.0/Api/search/timetable";
+    private static final String timetableUrl = "https://be.wizzair.com/9.20.0/Api/search/timetable";
+    private static final String BASE_URL = "https://be.wizzair.com/9.20.0/Api/";
+    private static final String TIMETABLE_URL = "search/timetable";
     private static final String USER_AGENT = "Mozilla/5.0";
     private static final String DISCOUNTED_PRICE = "wdc";
 
@@ -56,7 +58,7 @@ public class HttpRequestEngine {
 
                 try {
                     HttpClient client = HttpClientBuilder.create().build();
-                    HttpPost request = new HttpPost(timetableUrl);
+                    HttpPost request = new HttpPost(BASE_URL+TIMETABLE_URL);
                     request.setHeader("User-Agent", USER_AGENT);
                     Gson gson = new Gson();
                     StringEntity postingString = new StringEntity(gson.toJson(jsonRequest), ContentType.APPLICATION_JSON);
