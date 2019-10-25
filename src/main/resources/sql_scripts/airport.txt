@@ -146,4 +146,3 @@ INSERT INTO wizz_airport(alias,code,countryCode, countryName,latitude,longitude,
 INSERT INTO wizz_airport(alias,code,countryCode, countryName,latitude,longitude,currency_id)  values("","LTN","","",0.0,0.0,6);
 INSERT INTO wizz_airport(alias,code,countryCode, countryName,latitude,longitude,currency_id)  values("","LGW","","",0.0,0.0,6);
 INSERT INTO wizz_airport(alias,code,countryCode, countryName,latitude,longitude,currency_id)  values("","SKG","","",0.0,0.0,1);
-INSERT INTO wizz_airport(alias,code,countryCode, countryName,latitude,longitude,currency_id)  values();

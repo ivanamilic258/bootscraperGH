@@ -33,6 +33,8 @@ public class ResultsService {
 	AirportRepository            airportRepository;
 	@Autowired
 	UserRepository               userRepository;
+	@Autowired
+	EmailService emailService;
 
 	private static final int year = 2019;
 
@@ -102,7 +104,7 @@ public class ResultsService {
 		if (destinationsOfInterest != null && !destinationsOfInterest.isEmpty()) {
 			List<Long> ids = new ArrayList<>();
 			destinationsOfInterest.forEach( d -> ids.add( d.getId() ) );
-			if(departures !=  null && !departures.isEmpty()){
+			if (departures != null && !departures.isEmpty()) {
 				for (String departure : departures) {
 					ids.add( airportRepository.findAirportByCode( departure ).getId() );
 				}
@@ -134,7 +136,7 @@ public class ResultsService {
 		resultsRepository.saveAll( results );
 	}
 
-	public void importDestinationsForUser(String username, Date dateFrom, Date dateTo,List<String> departures) throws ParseException {
+	public void importDestinationsForUser(String username, Date dateFrom, Date dateTo, List<String> departures) throws ParseException {
 		resultsRepository.deleteAll();
 
 		List<Result> results = getResultsFromEndpoint( getRoutesForUserWithAddedDepartures( username, departures ), dateFrom, dateTo );
@@ -142,4 +144,26 @@ public class ResultsService {
 		resultsRepository.saveAll( results );
 	}
 
+	public void importAllFromAirportInDateRange(Date dateFrom, Date dateTo, String departure) throws ParseException {
+		resultsRepository.deleteAll();
+
+		List<Result> results = getResultsFromEndpoint( getAllRoutesFromAirport( departure ), dateFrom, dateTo );
+
+		resultsRepository.saveAll( results );
+	}
+
+	private List<DepArrDto> getAllRoutesFromAirport(String departure) {
+		List<DeparturesArrivalsRepository.DepArrCurrDto> allRoutes = getNonDuplicatedRoutes();
+		List<DepArrDto> resultList = new ArrayList<>();
+		for (DeparturesArrivalsRepository.DepArrCurrDto route : allRoutes) {
+			if (route.getArrival().equalsIgnoreCase( departure ) || route.getDeparture().equalsIgnoreCase( departure )) {
+				resultList.add( new DepArrDto( route.getDeparture(), route.getArrival() ) );
+			}
+		}
+		return resultList;
+	}
+
+	public void test(){
+		emailService.sendEmail();
+	}
 }

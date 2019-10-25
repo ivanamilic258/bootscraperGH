@@ -117,6 +117,7 @@ public class WizzScraperController {
    }
 
 
+
  //every possible combination for user's desired destinations
    @RequestMapping(value = "importDestinationsForUserFromTSR",method = RequestMethod.POST)
    @ResponseBody
@@ -142,6 +143,22 @@ public class WizzScraperController {
        }
    }
 
+    //every possible combination from beg
+    @RequestMapping(value = "importAllFromBEG",method = RequestMethod.POST)
+    @ResponseBody
+    public void importAllFromBEG(@RequestBody ImportResultsRequest request) {
+        try {
+            resultsService.importAllFromAirportInDateRange(request.getDateFrom(), request.getDateTo(), "BEG");
+        } catch (ParseException e) {
+            throw new StringException("Parsing exception");
+        }
+    }
+
+    @RequestMapping(value = "test",method = RequestMethod.POST)
+    @ResponseBody
+    public void test() {
+       resultsService.test();
+    }
 
 
 

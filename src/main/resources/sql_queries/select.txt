@@ -1,0 +1,14 @@
+SELECT r.departure, r.arrival,
+r.datetime, r.currency, r.price, r.price/c.eurConversionRate
+FROM `wizz_result` r
+join wizz_currency C on c.name=r.currency
+where r.departure='beg'
+order by  datetime
+;
+SELECT r.departure, r.arrival,
+r.datetime, r.currency, r.price, r.price/c.eurConversionRate
+FROM `wizz_result` r
+join wizz_currency C on c.name=r.currency
+where r.arrival='beg'
+order by  datetime
+;

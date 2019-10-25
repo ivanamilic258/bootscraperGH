@@ -44,6 +44,7 @@ public interface DeparturesArrivalsRepository extends CrudRepository<DeparturesA
             + "join wizz_airport a1 on a1.id = da.departureAirport_id", nativeQuery = true)
     List<DepArrCurrDto> findAllNonDuplicated();
 
+
     @Query(value =  "select  distinct \n"
             + "                      case \n"
             + "                       when da.departureAirport_id < da.arrivalAirport_id then a1.`code`\n"
