@@ -1,24 +1,24 @@
 
-INSERT INTO wiz_airport(eur_conversion_rate, name)  values(1.0,"EUR");
-INSERT INTO wiz_airport(eur_conversion_rate, name)  values(328.7,"HUF");
-INSERT INTO wiz_airport(eur_conversion_rate, name)  values(1.96,"BGN");
-INSERT INTO wiz_airport(eur_conversion_rate, name)  values(25.56,"CZK");
-INSERT INTO wiz_airport(eur_conversion_rate, name)  values(4.28,"PLN");
-INSERT INTO wiz_airport(eur_conversion_rate, name)  values(0.86,"GBP");
-INSERT INTO wiz_airport(eur_conversion_rate, name)  values(10.19,"NOK");
-INSERT INTO wiz_airport(eur_conversion_rate, name)  values(4.75,"RON");
-INSERT INTO wiz_airport(eur_conversion_rate, name)  values(10.74,"SEK");
-INSERT INTO wiz_airport(eur_conversion_rate, name)  values(117.5,"RSD");
-INSERT INTO wiz_airport(eur_conversion_rate, name)  values(27.9,"UAH");
-INSERT INTO wiz_airport(eur_conversion_rate, name)  values(7.45,"HRK");
-INSERT INTO wiz_airport(eur_conversion_rate, name)  values(1.11,"USD");
-INSERT INTO wiz_airport(eur_conversion_rate, name)  values(61.39,"MKD");
-INSERT INTO wiz_airport(eur_conversion_rate, name)  values(1.1,"CHF");
-INSERT INTO wiz_airport(eur_conversion_rate, name)  values(4.07,"AED");
-INSERT INTO wiz_airport(eur_conversion_rate, name)  values(3.92,"ILS");
-INSERT INTO wiz_airport(eur_conversion_rate, name)  values(1.96,"BAM");
-INSERT INTO wiz_airport(eur_conversion_rate, name)  values(3.27,"GEL");
-INSERT INTO wiz_airport(eur_conversion_rate, name)  values(7.47,"DKK");
+INSERT INTO wizz_currency(eurConversionRate, name)  values(1.0,"EUR");
+INSERT INTO wizz_currency(eurConversionRate, name)  values(328.7,"HUF");
+INSERT INTO wizz_currency(eurConversionRate, name)  values(1.96,"BGN");
+INSERT INTO wizz_currency(eurConversionRate, name)  values(25.56,"CZK");
+INSERT INTO wizz_currency(eurConversionRate, name)  values(4.28,"PLN");
+INSERT INTO wizz_currency(eurConversionRate, name)  values(0.86,"GBP");
+INSERT INTO wizz_currency(eurConversionRate, name)  values(10.19,"NOK");
+INSERT INTO wizz_currency(eurConversionRate, name)  values(4.75,"RON");
+INSERT INTO wizz_currency(eurConversionRate, name)  values(10.74,"SEK");
+INSERT INTO wizz_currency(eurConversionRate, name)  values(117.5,"RSD");
+INSERT INTO wizz_currency(eurConversionRate, name)  values(27.9,"UAH");
+INSERT INTO wizz_currency(eurConversionRate, name)  values(7.45,"HRK");
+INSERT INTO wizz_currency(eurConversionRate, name)  values(1.11,"USD");
+INSERT INTO wizz_currency(eurConversionRate, name)  values(61.39,"MKD");
+INSERT INTO wizz_currency(eurConversionRate, name)  values(1.1,"CHF");
+INSERT INTO wizz_currency(eurConversionRate, name)  values(4.07,"AED");
+INSERT INTO wizz_currency(eurConversionRate, name)  values(3.92,"ILS");
+INSERT INTO wizz_currency(eurConversionRate, name)  values(1.96,"BAM");
+INSERT INTO wizz_currency(eurConversionRate, name)  values(3.27,"GEL");
+INSERT INTO wizz_currency(eurConversionRate, name)  values(7.47,"DKK");
 
 
 
