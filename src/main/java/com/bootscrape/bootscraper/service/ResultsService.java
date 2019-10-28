@@ -197,7 +197,7 @@ public class ResultsService {
 
 		ByteArrayInputStream bis = new ByteArrayInputStream( pdfEngine.generatePdfFromList( rows) );
 		try {
-			mailService.sendEmailWithAttachment( Arrays.asList( mailTo ), "ivanaxyz123@gmail.com", "Your Wizz search results", "content", bis, "results.pdf" );
+			mailService.sendEmailWithAttachment( Arrays.asList( mailTo ), "ivanaxyz123@gmail.com", "Your Wizz search results", "Please find your search results attached.", bis, "results.pdf" );
 		} catch (MessagingException e) {
 			e.printStackTrace();
 		}

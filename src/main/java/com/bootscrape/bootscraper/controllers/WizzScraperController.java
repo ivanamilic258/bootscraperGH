@@ -144,11 +144,11 @@ public class WizzScraperController {
    }
 
     //every possible combination from beg
-    @RequestMapping(value = "importAllFromBEGAndSendToEmail",method = RequestMethod.POST)
+    @RequestMapping(value = "importAllFromBEG",method = RequestMethod.POST)
     @ResponseBody
-    public void importAllFromBEGAndSendToEmail(@RequestBody ImportResultsRequest request) {
+    public void importAllFromBEG(@RequestBody ImportResultsRequest request) {
         try {
-            resultsService.importAllFromAirportInDateRange(request.getDateFrom(), request.getDateTo(), Arrays.asList( "BEG" ), request.getEmail());
+            resultsService.importAllFromAirportInDateRange(request.getDateFrom(), request.getDateTo(), Arrays.asList( "BEG" ), null);
         } catch (ParseException e) {
             throw new StringException("Parsing exception");
         }
