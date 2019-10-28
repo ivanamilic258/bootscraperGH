@@ -4,18 +4,21 @@ import com.bootscrape.bootscraper.dto.request.DepArrDto;
 import com.bootscrape.bootscraper.dto.response.FlightDto;
 import com.bootscrape.bootscraper.dto.response.TimetableResponseDto;
 import com.bootscrape.bootscraper.engine.HttpRequestEngine;
+import com.bootscrape.bootscraper.engine.PdfEngine;
 import com.bootscrape.bootscraper.model.wizz.Airport;
+import com.bootscrape.bootscraper.model.wizz.Currency;
+import com.bootscrape.bootscraper.model.wizz.DeparturesArrivals;
 import com.bootscrape.bootscraper.model.wizz.Result;
 import com.bootscrape.bootscraper.model.wizz.User;
-import com.bootscrape.bootscraper.repository.AirportRepository;
-import com.bootscrape.bootscraper.repository.DeparturesArrivalsRepository;
-import com.bootscrape.bootscraper.repository.ResultsRepository;
-import com.bootscrape.bootscraper.repository.UserRepository;
-import com.bootscrape.bootscraper.util.ConstantManager;
+import com.bootscrape.bootscraper.repository.*;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.mail.MessagingException;
+import java.io.ByteArrayInputStream;
+import java.text.DateFormat;
+import java.text.MessageFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -34,7 +37,12 @@ public class ResultsService {
 	@Autowired
 	UserRepository               userRepository;
 	@Autowired
-	EmailService emailService;
+	MailService                  mailService;
+	@Autowired
+	CurrencyRepository           currencyRepository;
+
+	@Autowired
+	PdfEngine pdfEngine;
 
 	private static final int year = 2019;
 
@@ -142,28 +150,57 @@ public class ResultsService {
 		List<Result> results = getResultsFromEndpoint( getRoutesForUserWithAddedDepartures( username, departures ), dateFrom, dateTo );
 
 		resultsRepository.saveAll( results );
+		sendPdfToUser(userRepository.findUserByUsername(username).getEmail());
 	}
 
-	public void importAllFromAirportInDateRange(Date dateFrom, Date dateTo, String departure) throws ParseException {
+	public void importAllFromAirportInDateRange(Date dateFrom, Date dateTo, List<String> departures, String emailTo) throws ParseException {
 		resultsRepository.deleteAll();
-
-		List<Result> results = getResultsFromEndpoint( getAllRoutesFromAirport( departure ), dateFrom, dateTo );
-
+		List<Result> results = getResultsFromEndpoint( getAllRoutesFromAirports( departures ), dateFrom, dateTo );
 		resultsRepository.saveAll( results );
+		if(emailTo != null && !emailTo.equals( "" )) {
+			sendPdfToUser( emailTo);
+		}
 	}
 
-	private List<DepArrDto> getAllRoutesFromAirport(String departure) {
+
+	private List<DepArrDto> getAllRoutesFromAirports(List<String> departuresList) {
 		List<DeparturesArrivalsRepository.DepArrCurrDto> allRoutes = getNonDuplicatedRoutes();
 		List<DepArrDto> resultList = new ArrayList<>();
 		for (DeparturesArrivalsRepository.DepArrCurrDto route : allRoutes) {
-			if (route.getArrival().equalsIgnoreCase( departure ) || route.getDeparture().equalsIgnoreCase( departure )) {
+			if (departuresList.contains( route.getArrival() ) || departuresList.contains( route.getDeparture() )) {
 				resultList.add( new DepArrDto( route.getDeparture(), route.getArrival() ) );
 			}
 		}
 		return resultList;
 	}
 
-	public void test(){
-		emailService.sendEmail();
+	public void test() {
+//		ByteArrayInputStream bis = new ByteArrayInputStream( pdfEngine.generatePdfFromList( Arrays.asList( "fds", "fasd", "dscf" ) ) );
+//		try {
+//			mailService.sendEmailWithAttachment( Arrays.asList( "ivanamilic258@gmail.com" ), "ivanaxyz123@gmail.com", "subj", "content", bis, "" );
+//		} catch (MessagingException e) {
+//			e.printStackTrace();
+//		}
 	}
+
+	private void sendPdfToUser(String mailTo) {
+		DateFormat df = new SimpleDateFormat( "dd/MM/yyyy" );
+		Iterable<Result> allResults = resultsRepository.findAll();
+		List<String> rows = new ArrayList<>();
+		Iterator<Result> iter = allResults.iterator();
+		while (iter.hasNext()) {
+			Result result = iter.next();
+			Currency currency = currencyRepository.findByName( result.getCurrency() );
+			rows.add( MessageFormat.format( "{0} - {1} ({2}): {3}", result.getDeparture(), result.getArrival(), df.format( result.getDatetime() ),
+											result.getPrice() / currency.getEurConversionRate() ) );
+		}
+
+		ByteArrayInputStream bis = new ByteArrayInputStream( pdfEngine.generatePdfFromList( rows) );
+		try {
+			mailService.sendEmailWithAttachment( Arrays.asList( mailTo ), "ivanaxyz123@gmail.com", "Your Wizz search results", "content", bis, "results.pdf" );
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		}
+	}
+
 }

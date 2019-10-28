@@ -23,4 +23,5 @@ public class ImportResultsRequest {
     private Date dateFrom;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date dateTo;
+    private String email;
 }

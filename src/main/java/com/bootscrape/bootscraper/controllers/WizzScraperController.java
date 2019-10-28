@@ -144,20 +144,25 @@ public class WizzScraperController {
    }
 
     //every possible combination from beg
-    @RequestMapping(value = "importAllFromBEG",method = RequestMethod.POST)
+    @RequestMapping(value = "importAllFromBEGAndSendToEmail",method = RequestMethod.POST)
     @ResponseBody
-    public void importAllFromBEG(@RequestBody ImportResultsRequest request) {
+    public void importAllFromBEGAndSendToEmail(@RequestBody ImportResultsRequest request) {
         try {
-            resultsService.importAllFromAirportInDateRange(request.getDateFrom(), request.getDateTo(), "BEG");
+            resultsService.importAllFromAirportInDateRange(request.getDateFrom(), request.getDateTo(), Arrays.asList( "BEG" ), request.getEmail());
         } catch (ParseException e) {
             throw new StringException("Parsing exception");
         }
     }
 
-    @RequestMapping(value = "test",method = RequestMethod.POST)
+    //every possible combination from beg bud tsr
+    @RequestMapping(value = "importAllFromBEGBUDTSRAndSendToEmail",method = RequestMethod.POST)
     @ResponseBody
-    public void test() {
-       resultsService.test();
+    public void importAllFromBEGBUDTSRAndSendToEmail(@RequestBody ImportResultsRequest request) {
+        try {
+            resultsService.importAllFromAirportInDateRange(request.getDateFrom(), request.getDateTo(), Arrays.asList( "BEG", "BUD","TSR" ), request.getEmail());
+        } catch (ParseException e) {
+            throw new StringException("Parsing exception");
+        }
     }
 
 
