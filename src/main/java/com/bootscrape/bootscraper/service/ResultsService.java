@@ -183,7 +183,7 @@ public class ResultsService {
 //		}
 	}
 
-	private void sendPdfToUser(String mailTo) {
+	public void sendPdfToUser(String mailTo) {
 		DateFormat df = new SimpleDateFormat( "dd/MM/yyyy" );
 		Iterable<Result> allResults = resultsRepository.findAll();
 		List<String> rows = new ArrayList<>();

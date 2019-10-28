@@ -166,5 +166,16 @@ public class WizzScraperController {
     }
 
 
+ //every possible combination from beg bud tsr
+    @RequestMapping(value = "sendResultsEmail",method = RequestMethod.POST)
+    @ResponseBody
+    public void sendResultsEmail(@RequestBody ImportResultsRequest request) {
+
+            resultsService.sendPdfToUser( request.getEmail() );
+
+    }
+
+
+
 
 }
