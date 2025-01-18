@@ -6,6 +6,7 @@ import com.bootscrape.bootscraper.exception.StringException;
 import com.bootscrape.bootscraper.repository.DeparturesArrivalsRepository;
 import com.bootscrape.bootscraper.service.ResultsService;
 import com.bootscrape.bootscraper.service.UserService;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -101,6 +102,8 @@ public class WizzScraperController {
            resultsService.importDestinationsForUser(request.getUsername(), request.getDateFrom(), request.getDateTo(),departures);
        } catch (ParseException e) {
            throw new StringException("Parsing exception");
+       } catch (MessagingException e) {
+           throw new RuntimeException(e);
        }
    }
 
@@ -111,7 +114,7 @@ public class WizzScraperController {
        try {
            List<String> departures = Arrays.asList( "BEG" );
            resultsService.importDestinationsForUser(request.getUsername(), request.getDateFrom(), request.getDateTo(), departures);
-       } catch (ParseException e) {
+       } catch (ParseException | MessagingException e) {
            throw new StringException("Parsing exception");
        }
    }
@@ -125,7 +128,7 @@ public class WizzScraperController {
        try {
            List<String> departures = Arrays.asList( "TSR" );
            resultsService.importDestinationsForUser(request.getUsername(), request.getDateFrom(), request.getDateTo(), departures);
-       } catch (ParseException e) {
+       } catch (ParseException | MessagingException e) {
            throw new StringException("Parsing exception");
        }
    }
@@ -138,7 +141,7 @@ public class WizzScraperController {
        try {
            List<String> departures = Arrays.asList( "BUD" );
            resultsService.importDestinationsForUser(request.getUsername(), request.getDateFrom(), request.getDateTo(), departures);
-       } catch (ParseException e) {
+       } catch (ParseException | MessagingException e) {
            throw new StringException("Parsing exception");
        }
    }
@@ -151,6 +154,8 @@ public class WizzScraperController {
             resultsService.importAllFromAirportInDateRange(request.getDateFrom(), request.getDateTo(), Arrays.asList( "BEG" ), null);
         } catch (ParseException e) {
             throw new StringException("Parsing exception");
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -160,7 +165,7 @@ public class WizzScraperController {
     public void importAllFromBEGBUDTSRAndSendToEmail(@RequestBody ImportResultsRequest request) {
         try {
             resultsService.importAllFromAirportInDateRange(request.getDateFrom(), request.getDateTo(), Arrays.asList( "BEG", "BUD","TSR" ), request.getEmail());
-        } catch (ParseException e) {
+        } catch (ParseException | MessagingException e) {
             throw new StringException("Parsing exception");
         }
     }
@@ -169,7 +174,7 @@ public class WizzScraperController {
  //every possible combination from beg bud tsr
     @RequestMapping(value = "sendResultsEmail",method = RequestMethod.POST)
     @ResponseBody
-    public void sendResultsEmail(@RequestBody ImportResultsRequest request) {
+    public void sendResultsEmail(@RequestBody ImportResultsRequest request) throws MessagingException {
 
             resultsService.sendPdfToUser( request.getEmail() );
 

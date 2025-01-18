@@ -1,9 +1,10 @@
 package com.bootscrape.bootscraper.model.wizz;
 
+
 import lombok.Data;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Setter;
+import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
 
