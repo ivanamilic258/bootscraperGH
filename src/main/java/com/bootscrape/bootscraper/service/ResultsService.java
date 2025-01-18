@@ -11,11 +11,11 @@ import com.bootscrape.bootscraper.model.wizz.DeparturesArrivals;
 import com.bootscrape.bootscraper.model.wizz.Result;
 import com.bootscrape.bootscraper.model.wizz.User;
 import com.bootscrape.bootscraper.repository.*;
+import jakarta.mail.MessagingException;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.mail.MessagingException;
 import java.io.ByteArrayInputStream;
 import java.text.DateFormat;
 import java.text.MessageFormat;
@@ -144,7 +144,7 @@ public class ResultsService {
 		resultsRepository.saveAll( results );
 	}
 
-	public void importDestinationsForUser(String username, Date dateFrom, Date dateTo, List<String> departures) throws ParseException {
+	public void importDestinationsForUser(String username, Date dateFrom, Date dateTo, List<String> departures) throws ParseException, MessagingException {
 		resultsRepository.deleteAll();
 
 		List<Result> results = getResultsFromEndpoint( getRoutesForUserWithAddedDepartures( username, departures ), dateFrom, dateTo );
@@ -153,7 +153,7 @@ public class ResultsService {
 		sendPdfToUser(userRepository.findUserByUsername(username).getEmail());
 	}
 
-	public void importAllFromAirportInDateRange(Date dateFrom, Date dateTo, List<String> departures, String emailTo) throws ParseException {
+	public void importAllFromAirportInDateRange(Date dateFrom, Date dateTo, List<String> departures, String emailTo) throws ParseException, MessagingException {
 		resultsRepository.deleteAll();
 		List<Result> results = getResultsFromEndpoint( getAllRoutesFromAirports( departures ), dateFrom, dateTo );
 		resultsRepository.saveAll( results );
@@ -183,7 +183,7 @@ public class ResultsService {
 //		}
 	}
 
-	public void sendPdfToUser(String mailTo) {
+	public void sendPdfToUser(String mailTo) throws MessagingException {
 		DateFormat df = new SimpleDateFormat( "dd/MM/yyyy" );
 		Iterable<Result> allResults = resultsRepository.findAll();
 		List<String> rows = new ArrayList<>();
@@ -196,11 +196,7 @@ public class ResultsService {
 		}
 
 		ByteArrayInputStream bis = new ByteArrayInputStream( pdfEngine.generatePdfFromList( rows) );
-		try {
-			mailService.sendEmailWithAttachment( Arrays.asList( mailTo ), "ivanaxyz123@gmail.com", "Your Wizz search results", "Please find your search results attached.", bis, "results.pdf" );
-		} catch (MessagingException e) {
-			e.printStackTrace();
-		}
-	}
+        mailService.sendEmailWithAttachment( Arrays.asList( mailTo ), "ivanaxyz123@gmail.com", "Your Wizz search results", "Please find your search results attached.", bis, "results.pdf" );
+    }
 
 }

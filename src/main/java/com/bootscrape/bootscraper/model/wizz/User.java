@@ -1,6 +1,7 @@
 package com.bootscrape.bootscraper.model.wizz;
 
 import lombok.*;
+import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
 import java.util.HashSet;

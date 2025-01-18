@@ -2,9 +2,6 @@ package com.bootscrape.bootscraper.dto;
 
 import lombok.NonNull;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 
 public class UserDto {
 

@@ -5,6 +5,7 @@ import lombok.*;
 
 import javax.persistence.*;
 
+
 @Entity
 @Data
 @Table(name = "wizz_departures_arrivals")
