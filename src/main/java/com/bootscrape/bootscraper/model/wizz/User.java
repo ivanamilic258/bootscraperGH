@@ -1,11 +1,12 @@
 package com.bootscrape.bootscraper.model.wizz;
 
+import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.lang.NonNull;
 
-import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
+
 
 @Entity
 @Data

@@ -3,7 +3,7 @@ package com.bootscrape.bootscraper.model.wizz;
 import com.bootscrape.bootscraper.dto.request.DepArrDto;
 import lombok.*;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 
 @Entity
